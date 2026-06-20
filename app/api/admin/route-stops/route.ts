@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET(request: Request) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { searchParams } = new URL(request.url);
   const routeId = searchParams.get("route_id");
 
@@ -19,6 +20,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await request.json();
     const { route_id, stop_id, sequence_order, eta_minutes_from_origin } = body;
 

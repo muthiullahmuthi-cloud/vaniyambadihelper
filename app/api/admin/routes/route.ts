@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data, error } = await supabaseAdmin
     .from("routes")
     .select("*, origin:origin_stop_id(name), destination:destination_stop_id(name)")
@@ -13,6 +14,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await request.json();
     const { route_number, route_name, route_type, origin_stop_id, destination_stop_id, direction_group } = body;
 

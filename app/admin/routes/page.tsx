@@ -1,9 +1,10 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { RoutesManager } from "./RoutesManager";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminRoutesPage() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: routes } = await supabaseAdmin
     .from("routes")
     .select("*, origin:origin_stop_id(name), destination:destination_stop_id(name)")

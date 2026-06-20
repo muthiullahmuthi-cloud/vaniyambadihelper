@@ -24,34 +24,22 @@ export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 // Admin client — uses the service role key (bypasses RLS)
 // ⚠️  SERVER-SIDE ONLY. Never import this file in Client Components.
 // ---------------------------------------------------------------------------
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-let _supabaseAdmin: ReturnType<typeof createClient> | undefined;
-
-function ensureAdminClient() {
-  if (!_supabaseAdmin) {
-    if (!supabaseServiceRoleKey) {
-      if (typeof window !== "undefined") {
-        throw new Error(
-          "supabaseAdmin is not available in the browser — SUPABASE_SERVICE_ROLE_KEY is a server-only env var"
-        );
-      }
+export function getSupabaseAdmin(): ReturnType<typeof createClient> {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) {
+    if (typeof window !== "undefined") {
       throw new Error(
-        "SUPABASE_SERVICE_ROLE_KEY is not configured as an environment variable"
+        "getSupabaseAdmin() is not available in the browser — SUPABASE_SERVICE_ROLE_KEY is a server-only env var"
       );
     }
-    _supabaseAdmin = createClient(supabaseUrl!, supabaseServiceRoleKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    });
+    throw new Error(
+      "SUPABASE_SERVICE_ROLE_KEY is not configured as an environment variable"
+    );
   }
-  return _supabaseAdmin;
+  return createClient(supabaseUrl!, key, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
-
-export const supabaseAdmin = new Proxy(
-  {} as ReturnType<typeof createClient>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  { get: (_, prop) => (ensureAdminClient() as any)[prop] }
-);

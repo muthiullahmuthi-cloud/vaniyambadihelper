@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET(request: Request) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { searchParams } = new URL(request.url);
   const routeId = searchParams.get("route_id");
 
@@ -19,6 +20,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await request.json();
 
     if (body.bulk) {
@@ -49,6 +51,7 @@ export async function POST(request: Request) {
 }
 
 async function handleBulkImport(rows: unknown[]) {
+  const supabaseAdmin = getSupabaseAdmin();
   if (!Array.isArray(rows) || rows.length === 0) {
     return NextResponse.json({ error: "rows must be a non-empty array" }, { status: 400 });
   }

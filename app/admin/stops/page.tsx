@@ -1,9 +1,10 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { StopsManager } from "./StopsManager";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminStopsPage() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: stops } = await supabaseAdmin
     .from("stops")
     .select("*")

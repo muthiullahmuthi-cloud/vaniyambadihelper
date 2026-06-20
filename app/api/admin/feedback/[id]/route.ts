@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await request.json();
 
     if (body.resolved === undefined) {

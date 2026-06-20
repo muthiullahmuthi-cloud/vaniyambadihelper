@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await request.json();
     const { name, name_local, latitude, longitude } = body;
 
@@ -27,6 +28,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin
     .from("stops")
     .delete()

@@ -1,9 +1,10 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { SchedulesManager } from "./SchedulesManager";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSchedulesPage() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: routes } = await supabaseAdmin
     .from("routes")
     .select("id, route_number, route_name")

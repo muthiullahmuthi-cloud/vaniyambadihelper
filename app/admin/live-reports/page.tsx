@@ -1,9 +1,10 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { LiveReportsManager } from "./LiveReportsManager";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminLiveReportsPage() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: reports } = await supabaseAdmin
     .from("live_reports")
     .select("*, routes!inner(route_number, route_name), stops!inner(name)")

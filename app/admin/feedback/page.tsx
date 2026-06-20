@@ -1,9 +1,10 @@
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { FeedbackManager } from "./FeedbackManager";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminFeedbackPage() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: feedback } = await supabaseAdmin
     .from("feedback")
     .select("*")
