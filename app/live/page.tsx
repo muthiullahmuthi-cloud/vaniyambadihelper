@@ -1,8 +1,11 @@
-export default function LiveMapPage() {
+import { LiveMapView } from "./LiveMapView";
+
+export const dynamic = "force-dynamic";
+
+export default function LivePage() {
   return (
-    <main>
-      <h1>Live Map</h1>
-      <p>Real-time map of all active crowd-reported buses — coming soon.</p>
+    <main className="py-0">
+      <LiveMapView />
     </main>
   );
 }
