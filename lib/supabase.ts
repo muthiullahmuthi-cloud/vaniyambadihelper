@@ -36,7 +36,7 @@ export function getSupabaseAdmin() {
       "SUPABASE_SERVICE_ROLE_KEY is not configured as an environment variable"
     );
   }
-  return createClient<any>(supabaseUrl!, key, {
+  return createClient<any>(supabaseUrl!, key, { // eslint-disable-line @typescript-eslint/no-explicit-any
     auth: {
       autoRefreshToken: false,
       persistSession: false,
