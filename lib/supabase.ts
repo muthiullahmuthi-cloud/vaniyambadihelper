@@ -26,14 +26,12 @@ export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 // ---------------------------------------------------------------------------
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseServiceRoleKey) {
-  console.warn('Missing env: SUPABASE_SERVICE_ROLE_KEY — admin features will fail');
-}
-
-export const supabaseAdmin = createClient(supabaseUrl!, supabaseServiceRoleKey!, {
-  auth: {
-    // Prevent the admin client from persisting sessions in cookies/localStorage
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+export const supabaseAdmin = supabaseServiceRoleKey
+  ? createClient(supabaseUrl!, supabaseServiceRoleKey, {
+      auth: {
+        // Prevent the admin client from persisting sessions in cookies/localStorage
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    })
+  : undefined;
