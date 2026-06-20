@@ -26,12 +26,31 @@ export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 // ---------------------------------------------------------------------------
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-export const supabaseAdmin = supabaseServiceRoleKey
-  ? createClient(supabaseUrl!, supabaseServiceRoleKey, {
+let _supabaseAdmin: ReturnType<typeof createClient> | undefined;
+
+function ensureAdminClient() {
+  if (!_supabaseAdmin) {
+    if (!supabaseServiceRoleKey) {
+      if (typeof window !== "undefined") {
+        throw new Error(
+          "supabaseAdmin is not available in the browser — SUPABASE_SERVICE_ROLE_KEY is a server-only env var"
+        );
+      }
+      throw new Error(
+        "SUPABASE_SERVICE_ROLE_KEY is not configured as an environment variable"
+      );
+    }
+    _supabaseAdmin = createClient(supabaseUrl!, supabaseServiceRoleKey, {
       auth: {
-        // Prevent the admin client from persisting sessions in cookies/localStorage
         autoRefreshToken: false,
         persistSession: false,
       },
-    })
-  : undefined;
+    });
+  }
+  return _supabaseAdmin;
+}
+
+export const supabaseAdmin = new Proxy(
+  {} as ReturnType<typeof createClient>,
+  { get: (_, prop) => (ensureAdminClient() as any)[prop] }
+);
