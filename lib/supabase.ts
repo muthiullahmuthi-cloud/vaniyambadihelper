@@ -24,7 +24,7 @@ export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
 // Admin client — uses the service role key (bypasses RLS)
 // ⚠️  SERVER-SIDE ONLY. Never import this file in Client Components.
 // ---------------------------------------------------------------------------
-export function getSupabaseAdmin(): ReturnType<typeof createClient> {
+export function getSupabaseAdmin() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) {
     if (typeof window !== "undefined") {
@@ -36,7 +36,7 @@ export function getSupabaseAdmin(): ReturnType<typeof createClient> {
       "SUPABASE_SERVICE_ROLE_KEY is not configured as an environment variable"
     );
   }
-  return createClient(supabaseUrl!, key, {
+  return createClient<any>(supabaseUrl!, key, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
