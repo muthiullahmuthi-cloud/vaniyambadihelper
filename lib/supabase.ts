@@ -52,5 +52,6 @@ function ensureAdminClient() {
 
 export const supabaseAdmin = new Proxy(
   {} as ReturnType<typeof createClient>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { get: (_, prop) => (ensureAdminClient() as any)[prop] }
 );
