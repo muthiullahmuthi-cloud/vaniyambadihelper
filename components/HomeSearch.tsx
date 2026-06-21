@@ -21,16 +21,21 @@ export function HomeSearch() {
   const handlePlaceSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!from && !to) return;
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
     if (from) params.set("from", from);
     if (to) params.set("to", to);
-    router.push(`/search?${params.toString()}`);
+    params.delete("route");
+    router.replace(`/?${params.toString()}`);
   };
 
   const handleRouteSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!routeNumber) return;
-    router.push(`/search?route=${encodeURIComponent(routeNumber)}`);
+    const params = new URLSearchParams(window.location.search);
+    params.set("route", routeNumber);
+    params.delete("from");
+    params.delete("to");
+    router.replace(`/?${params.toString()}`);
   };
 
   return (

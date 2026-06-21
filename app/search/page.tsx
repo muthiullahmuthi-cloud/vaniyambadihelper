@@ -1,9 +1,9 @@
 import { supabase } from "@/lib/supabase";
-import { getNextDepartures, getTwentyMinutesAgoIST } from "@/lib/timeUtils";
+import { getTwentyMinutesAgoIST } from "@/lib/timeUtils";
+import { RouteResultCard } from "@/components/RouteResultCard";
 import { Card, CardContent } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { ArrowRight, Clock, Info, ChevronLeft } from "lucide-react";
+import { Info, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -125,64 +125,13 @@ export default async function SearchResultsPage({
 
       {matchedRoutes.length > 0 ? (
         <div className="flex flex-col gap-4">
-          {matchedRoutes.map((route) => {
-            const isLive = liveRouteIds.has(route.id);
-            const nextDepartures = getNextDepartures(route.schedules || []);
-            
-            return (
-              <Link key={route.id} href={`/route/${route.id}`}>
-                <Card className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
-                  <CardContent className="p-5">
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="font-bold text-primary bg-primary/10 text-sm">
-                          {route.route_number}
-                        </Badge>
-                        {isLive && (
-                          <Badge variant="live" className="text-[10px] uppercase px-2 animate-pulse-glow">
-                            Live
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-
-                    <h2 className="text-lg font-bold text-gray-900 leading-tight mb-2">
-                      {route.route_name}
-                    </h2>
-                    
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                      <span className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-[200px]">
-                        {route.origin?.name || "Unknown Origin"}
-                      </span>
-                      <ArrowRight className="w-4 h-4 text-gray-400 shrink-0" />
-                      <span className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-[200px]">
-                        {route.destination?.name || "Unknown Dest"}
-                      </span>
-                    </div>
-
-                    <div className="bg-gray-50 rounded-lg p-3 flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">Next Departures</p>
-                        {nextDepartures.length > 0 ? (
-                          <div className="flex flex-wrap gap-2">
-                            {nextDepartures.map((time, idx) => (
-                              <span key={idx} className="text-sm font-semibold text-primary bg-white border border-gray-200 px-2 py-1 rounded">
-                                {time}
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-sm text-gray-600 italic">No schedule available</span>
-                        )}
-                      </div>
-                    </div>
-
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
+          {matchedRoutes.map((route) => (
+            <RouteResultCard
+              key={route.id}
+              route={route}
+              isLive={liveRouteIds.has(route.id)}
+            />
+          ))}
         </div>
       ) : (
         <Card className="bg-gray-50 border-dashed mt-8">

@@ -1,12 +1,12 @@
 import { supabase } from "@/lib/supabase";
 import { getTwentyMinutesAgoIST } from "@/lib/timeUtils";
 import { HomeSearch } from "@/components/HomeSearch";
+import { SearchResults } from "@/components/SearchResults";
+import { LiveReportsSection } from "@/components/LiveReportsSection";
 import { TypeToggle } from "@/components/TypeToggle";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { Clock, MapPin, Bus } from "lucide-react";
 import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
 
 // Prevent static generation for this page to ensure live data is always fresh
 export const dynamic = "force-dynamic";
@@ -93,49 +93,13 @@ export default async function HomePage({
           </h2>
         </div>
 
-        {liveReports && liveReports.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {(liveReports as unknown as Array<{ id: string, created_at: string, routes: { id: string, route_name: string }, stops: { name: string } }>).map((report) => {
-              const timeAgo = formatDistanceToNow(new Date(report.created_at), { addSuffix: true });
-              return (
-                <Card key={report.id} className="overflow-hidden hover:border-accent/50 transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <Badge variant="live" className="text-[10px] uppercase px-2">Live</Badge>
-                      <span className="text-xs font-medium text-gray-500 flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {timeAgo}
-                      </span>
-                    </div>
-                    <Link href={`/route/${report.routes.id}`} className="block group">
-                      <h3 className="font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-1">
-                        {report.routes.route_name}
-                      </h3>
-                      <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 text-accent" />
-                        <span className="truncate">
-                          Seen at <span className="font-semibold text-gray-900">{report.stops.name}</span>
-                        </span>
-                      </div>
-                    </Link>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        ) : (
-          <Card className="bg-gray-50 border-dashed">
-            <CardContent className="flex flex-col items-center justify-center py-10 text-center">
-              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
-                <Bus className="w-6 h-6 text-gray-400" />
-              </div>
-              <h3 className="text-gray-900 font-semibold">No live reports right now</h3>
-              <p className="text-sm text-gray-500 mt-1 max-w-[250px]">
-                Be the first to report a bus and help other commuters in Vaniyambadi!
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        <LiveReportsSection
+          reports={(liveReports as unknown as Array<{ id: string; created_at: string; routes: { id: string; route_name: string }; stops: { name: string } }>) || []}
+        />
       </section>
+
+      {/* Inline Search Results */}
+      <SearchResults />
 
       {/* Popular Routes Section */}
       <section className="max-w-3xl mx-auto w-full mt-4">
