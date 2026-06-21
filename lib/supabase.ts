@@ -18,7 +18,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!supabaseUrl) throw new Error('Missing env: NEXT_PUBLIC_SUPABASE_URL');
 if (!supabaseAnonKey) throw new Error('Missing env: NEXT_PUBLIC_SUPABASE_ANON_KEY');
 
-export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+export const supabase = createClient<any>(supabaseUrl!, supabaseAnonKey!); // eslint-disable-line @typescript-eslint/no-explicit-any
 
 // ---------------------------------------------------------------------------
 // Admin client — uses the service role key (bypasses RLS)

@@ -14,16 +14,31 @@ export function HomeSearch() {
   // State for place search
   const [from, setFrom] = React.useState("");
   const [to, setTo] = React.useState("");
+  // Refs hold latest values synchronously to avoid React 18 batching delays
+  const fromRef = React.useRef(from);
+  const toRef = React.useRef(to);
   
   // State for route search
   const [routeNumber, setRouteNumber] = React.useState("");
 
+  const updateFrom = React.useCallback((val: string) => {
+    fromRef.current = val;
+    setFrom(val);
+  }, []);
+
+  const updateTo = React.useCallback((val: string) => {
+    toRef.current = val;
+    setTo(val);
+  }, []);
+
   const handlePlaceSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!from && !to) return;
+    const f = fromRef.current;
+    const t = toRef.current;
+    if (!f && !t) return;
     const params = new URLSearchParams(window.location.search);
-    if (from) params.set("from", from);
-    if (to) params.set("to", to);
+    if (f) params.set("from", f);
+    if (t) params.set("to", t);
     params.delete("route");
     router.replace(`/?${params.toString()}`);
   };
@@ -77,7 +92,7 @@ export function HomeSearch() {
                     placeholder="From (e.g. Bus Stand)"
                     icon={<MapPin className="h-5 w-5 text-gray-400" />}
                     value={from}
-                    onValueChange={(val) => setFrom(val)}
+                    onValueChange={updateFrom}
                   />
                 </div>
                 <div className="hidden sm:flex items-center justify-center text-gray-400">
@@ -88,7 +103,7 @@ export function HomeSearch() {
                     placeholder="To (e.g. Ambur)"
                     icon={<MapPin className="h-5 w-5 text-gray-400" />}
                     value={to}
-                    onValueChange={(val) => setTo(val)}
+                    onValueChange={updateTo}
                   />
                 </div>
               </div>
