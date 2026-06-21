@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Search, MapPin, Bus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { StopAutocomplete } from "@/components/StopAutocomplete";
 
 export function HomeSearch() {
   const router = useRouter();
@@ -66,27 +67,23 @@ export function HomeSearch() {
           {activeTab === "place" ? (
             <form onSubmit={handlePlaceSearch} className="flex flex-col gap-4">
               <div className="flex flex-col gap-3 sm:flex-row relative">
-                <div className="relative flex-1">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
+                <div className="flex-1">
+                  <StopAutocomplete
                     placeholder="From (e.g. Bus Stand)"
+                    icon={<MapPin className="h-5 w-5 text-gray-400" />}
                     value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    onValueChange={(val) => setFrom(val)}
                   />
                 </div>
                 <div className="hidden sm:flex items-center justify-center text-gray-400">
                   →
                 </div>
-                <div className="relative flex-1">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
+                <div className="flex-1">
+                  <StopAutocomplete
                     placeholder="To (e.g. Ambur)"
+                    icon={<MapPin className="h-5 w-5 text-gray-400" />}
                     value={to}
-                    onChange={(e) => setTo(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    onValueChange={(val) => setTo(val)}
                   />
                 </div>
               </div>
