@@ -30,15 +30,6 @@ const CATEGORIES = [
   { value: "other", label: "Other" },
 ];
 
-const EMPTY_FORM = {
-  name: "",
-  category: "hospital",
-  phone: "",
-  address: "",
-  is_24x7: false,
-  display_order: 0,
-};
-
 export function EmergencyManager({ contacts: initial }: EmergencyManagerProps) {
   const router = useRouter();
   const [contacts, setContacts] = useState<EmergencyContact[]>(initial);
