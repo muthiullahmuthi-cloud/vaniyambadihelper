@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { getTwentyMinutesAgoIST } from "@/lib/timeUtils";
+import { getTwentyMinutesAgoIST, formatIST } from "@/lib/timeUtils";
 import { HomeSearch } from "@/components/HomeSearch";
 import { SearchResults } from "@/components/SearchResults";
 import { LiveReportsSection } from "@/components/LiveReportsSection";
@@ -7,6 +7,8 @@ import { TypeToggle } from "@/components/TypeToggle";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import Link from "next/link";
+import { Zap, Droplets } from "lucide-react";
+import { AdBoard } from "@/components/AdBoard";
 
 // Prevent static generation for this page to ensure live data is always fresh
 export const dynamic = "force-dynamic";
@@ -63,6 +65,23 @@ export default async function HomePage({
     .sort((a, b) => b.scheduleCount - a.scheduleCount)
     .slice(0, 6);
 
+  // 3. Fetch active Power & Water updates for home screen banner
+  const { data: activeUpdates } = await supabase
+    .from("power_water_updates")
+    .select("*")
+    .eq("status", "active")
+    .order("starts_at", { ascending: false })
+    .limit(3);
+
+  const powerWaterUpdates = (activeUpdates as Array<{
+    id: string;
+    type: "power_cut" | "water_supply";
+    area: string;
+    description: string;
+    starts_at: string;
+    ends_at: string | null;
+  }>) || [];
+
   return (
     <div className="flex flex-col gap-8 pb-12">
       {/* Hero Section */}
@@ -80,6 +99,57 @@ export default async function HomePage({
         <HomeSearch />
         <TypeToggle />
       </section>
+
+      {/* Power & Water Banner — only shown when there are active updates */}
+      {powerWaterUpdates.length > 0 && (
+        <section className="max-w-3xl mx-auto w-full">
+          <Link href="/updates" className="block">
+            {(() => {
+              const latest = powerWaterUpdates[0];
+              const isPowerCut = latest.type === "power_cut";
+              const moreCount = powerWaterUpdates.length - 1;
+              return (
+                <div className={`rounded-xl border-2 p-4 shadow-sm transition-colors hover:shadow-md ${
+                  isPowerCut
+                    ? "border-amber-200 bg-amber-50 hover:bg-amber-100/50"
+                    : "border-blue-200 bg-blue-50 hover:bg-blue-100/50"
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      isPowerCut ? "bg-amber-100" : "bg-blue-100"
+                    }`}>
+                      {isPowerCut
+                        ? <Zap className="w-5 h-5 text-amber-600" />
+                        : <Droplets className="w-5 h-5 text-primary" />
+                      }
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-gray-900">
+                        <span className={isPowerCut ? "text-amber-600" : "text-primary"}>
+                          {isPowerCut ? "\u26A1 Power cut" : "\u{1F4A7} Water supply"}
+                        </span>{" "}
+                        in {latest.area}
+                        {latest.ends_at
+                          ? <> until {formatIST(new Date(latest.ends_at), "h:mm a")}</>
+                          : <> — ongoing</>
+                        }
+                      </p>
+                      {moreCount > 0 && (
+                        <p className="text-sm text-gray-500 mt-0.5">
+                          +{moreCount} more active update{moreCount > 1 ? "s" : ""}
+                        </p>
+                      )}
+                    </div>
+                    <Badge variant={isPowerCut ? "live" : "default"} className="flex-shrink-0 text-[10px]">
+                      Live
+                    </Badge>
+                  </div>
+                </div>
+              );
+            })()}
+          </Link>
+        </section>
+      )}
 
       {/* Live Right Now Section */}
       <section className="max-w-3xl mx-auto w-full">
@@ -132,6 +202,11 @@ export default async function HomePage({
             No popular routes available yet.
           </div>
         )}
+      </section>
+
+      {/* Ad Board */}
+      <section className="max-w-3xl mx-auto w-full">
+        <AdBoard />
       </section>
     </div>
   );

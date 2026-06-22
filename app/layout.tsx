@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
-import { MessageSquareWarning } from "lucide-react";
+import { MessageSquareWarning, Store, Phone as PhoneIcon } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -46,8 +46,16 @@ export default function RootLayout({
           {children}
         </main>
 
-        {/* Global Floating Action Button for Reporting */}
-        <div className="fixed bottom-6 right-6 z-50">
+        {/* Global Floating Action Buttons */}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+          <Link
+            href="/directory/register"
+            className="flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            aria-label="Register Your Business"
+          >
+            <Store className="h-5 w-5" />
+            <span className="hidden sm:inline">Register</span>
+          </Link>
           <Link
             href="/report"
             className="flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
@@ -67,6 +75,16 @@ export default function RootLayout({
             <nav className="flex gap-6 text-sm text-gray-600">
               <Link href="/about" className="hover:text-primary transition-colors">
                 About
+              </Link>
+              <Link href="/emergency" className="hover:text-red-600 transition-colors flex items-center gap-1">
+                <PhoneIcon className="w-3.5 h-3.5" />
+                Emergency
+              </Link>
+              <Link href="/updates" className="hover:text-amber-600 transition-colors">
+                Updates
+              </Link>
+              <Link href="/namaz" className="hover:text-primary transition-colors">
+                Namaz
               </Link>
               <Link href="/about#feedback" className="hover:text-primary transition-colors">
                 Feedback

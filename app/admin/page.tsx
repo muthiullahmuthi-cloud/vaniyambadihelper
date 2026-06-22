@@ -8,6 +8,10 @@ const sections = [
   { href: "/admin/schedules", label: "Schedules", desc: "Times + CSV bulk import" },
   { href: "/admin/feedback", label: "Feedback", desc: "View and resolve user feedback" },
   { href: "/admin/live-reports", label: "Live Reports", desc: "Review and delete spam reports" },
+  { href: "/admin/power-water", label: "Power & Water", desc: "Manage power cut and water supply updates" },
+  { href: "/admin/advertisements", label: "Advertisements", desc: "Manage business ad board" },
+  { href: "/admin/emergency", label: "Emergency Contacts", desc: "Manage emergency phone numbers" },
+  { href: "/admin/namaz", label: "Namaz Timings", desc: "Verify and manage mosque prayer times" },
 ];
 
 export default function AdminDashboard() {
