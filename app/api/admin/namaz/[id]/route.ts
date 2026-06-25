@@ -33,12 +33,17 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
-  const supabaseAdmin = getSupabaseAdmin();
-  const { error } = await supabaseAdmin
-    .from("mosques")
-    .delete()
-    .eq("id", params.id);
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    const { error } = await supabaseAdmin
+      .from("mosques")
+      .delete()
+      .eq("id", params.id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ success: true });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("DELETE mosque error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

@@ -37,10 +37,16 @@ export function NamazManager({ mosques: initial }: NamazManagerProps) {
     if (!confirm("Delete this mosque entry permanently?")) return;
     try {
       const res = await fetch(`/api/admin/namaz/${id}`, { method: "DELETE" });
-      if (!res.ok) { const d = await res.json(); setError(d.error || "Delete failed"); return; }
+      if (!res.ok) {
+        let msg = "Delete failed";
+        try { const d = await res.json(); msg = d.error || msg; } catch { /* ignore parse error */ }
+        setError(msg);
+        return;
+      }
       setMosques((prev) => prev.filter((m) => m.id !== id));
       router.refresh();
-    } catch {
+    } catch (err) {
+      console.error("Delete error:", err);
       setError("Network error");
     }
   }
