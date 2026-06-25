@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
 import Link from "next/link";
-import { MessageSquareWarning, Store, Phone as PhoneIcon } from "lucide-react";
+import { MessageSquareWarning, Store } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased bg-gray-50 text-gray-900 flex flex-col min-h-screen`}>
-        <Navbar />
+        <Sidebar />
         
         {/* Main Content */}
         <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -68,28 +68,10 @@ export default function RootLayout({
 
         {/* Footer */}
         <footer className="w-full border-t bg-white py-6 mt-auto">
-          <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 sm:px-6 lg:px-8">
             <p className="text-sm text-gray-500 font-medium">
-              Built for Vaniyambadi
+              &copy; Vaniyambadi Helper
             </p>
-            <nav className="flex gap-6 text-sm text-gray-600">
-              <Link href="/about" className="hover:text-primary transition-colors">
-                About
-              </Link>
-              <Link href="/emergency" className="hover:text-red-600 transition-colors flex items-center gap-1">
-                <PhoneIcon className="w-3.5 h-3.5" />
-                Emergency
-              </Link>
-              <Link href="/updates" className="hover:text-amber-600 transition-colors">
-                Updates
-              </Link>
-              <Link href="/namaz" className="hover:text-primary transition-colors">
-                Namaz
-              </Link>
-              <Link href="/about#feedback" className="hover:text-primary transition-colors">
-                Feedback
-              </Link>
-            </nav>
           </div>
         </footer>
       </body>

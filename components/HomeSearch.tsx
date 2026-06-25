@@ -21,6 +21,17 @@ export function HomeSearch() {
   // State for route search
   const [routeNumber, setRouteNumber] = React.useState("");
 
+  // Pre-fill from URL params on mount (backward compatibility)
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const fromVal = params.get("from");
+    const toVal = params.get("to");
+    const routeVal = params.get("route");
+    if (fromVal) { setFrom(fromVal); fromRef.current = fromVal; }
+    if (toVal) { setTo(toVal); toRef.current = toVal; }
+    if (routeVal) { setRouteNumber(routeVal); setActiveTab("route"); }
+  }, []);
+
   const updateFrom = React.useCallback((val: string) => {
     fromRef.current = val;
     setFrom(val);
@@ -36,21 +47,18 @@ export function HomeSearch() {
     const f = fromRef.current;
     const t = toRef.current;
     if (!f && !t) return;
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams();
     if (f) params.set("from", f);
     if (t) params.set("to", t);
-    params.delete("route");
-    router.replace(`/?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
 
   const handleRouteSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!routeNumber) return;
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams();
     params.set("route", routeNumber);
-    params.delete("from");
-    params.delete("to");
-    router.replace(`/?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
 
   return (

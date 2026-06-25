@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { getTwentyMinutesAgoIST, formatIST } from "@/lib/timeUtils";
 import { HomeSearch } from "@/components/HomeSearch";
-import { SearchResults } from "@/components/SearchResults";
 import { LiveReportsSection } from "@/components/LiveReportsSection";
 import { TypeToggle } from "@/components/TypeToggle";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -167,9 +166,6 @@ export default async function HomePage({
           reports={(liveReports as unknown as Array<{ id: string; created_at: string; routes: { id: string; route_name: string }; stops: { name: string } }>) || []}
         />
       </section>
-
-      {/* Inline Search Results */}
-      <SearchResults />
 
       {/* Popular Routes Section */}
       <section className="max-w-3xl mx-auto w-full mt-4">
