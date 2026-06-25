@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { Card, CardContent } from "@/components/ui/Card";
 import Link from "next/link";
 import { Phone } from "lucide-react";
@@ -42,7 +42,8 @@ function timeAgo(dateStr: string): string {
 }
 
 export default async function NamazPage() {
-  const { data: mosques } = await supabase
+  const supabaseAdmin = getSupabaseAdmin();
+  const { data: mosques } = await supabaseAdmin
     .from("mosques")
     .select("*")
     .eq("status", "verified")

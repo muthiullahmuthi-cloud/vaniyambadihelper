@@ -26,9 +26,11 @@ const CATEGORY_CONFIG: Record<string, { label: string; icon: React.ComponentType
 };
 
 function formatTelLink(phone: string): string {
-  const cleaned = phone.replace(/[\s-]/g, "");
-  const prefixed = cleaned.startsWith("+91") ? cleaned : `+91${cleaned}`;
-  return `tel:${prefixed}`;
+  const cleaned = phone.replace(/[\s\-()]/g, "");
+  if (cleaned.length === 10 && /^[6-9]/.test(cleaned)) {
+    return `tel:+91${cleaned}`;
+  }
+  return `tel:${cleaned}`;
 }
 
 function isPhoneValid(phone: string): boolean {

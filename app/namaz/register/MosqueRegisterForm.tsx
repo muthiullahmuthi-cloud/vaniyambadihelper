@@ -73,6 +73,13 @@ export function MosqueRegisterForm() {
     setSuccess(true);
   }
 
+  React.useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => router.push("/namaz"), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, router]);
+
   if (success) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
@@ -81,15 +88,10 @@ export function MosqueRegisterForm() {
         </div>
         <h1 className="text-2xl font-extrabold text-gray-900">Thank you!</h1>
         <p className="text-gray-500 max-w-sm">
-          Your mosque will appear once verified by the app admin.
+          Your mosque is now listed! People can see your timings.
         </p>
         <p className="text-xs text-gray-400">
-          <button
-            onClick={() => router.push("/namaz")}
-            className="text-primary hover:underline"
-          >
-            View namaz timings
-          </button>
+          Redirecting to namaz timings...
         </p>
       </div>
     );
@@ -99,8 +101,8 @@ export function MosqueRegisterForm() {
     <form onSubmit={handleSubmit} className="max-w-lg mx-auto flex flex-col gap-6">
       <h1 className="text-xl font-extrabold text-gray-900">Register Your Mosque</h1>
       <p className="text-sm text-gray-500 -mt-4">
-        Enter the actual Azan times as announced by your mosque. Your listing will be
-        reviewed before going live.
+        Enter the actual Azan times as announced by your mosque. Your listing will
+        appear immediately on the namaz timings page.
       </p>
 
       {error && (

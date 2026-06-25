@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, CheckCircle, Pencil, XCircle } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 
 interface Mosque {
   id: string;
@@ -31,24 +31,7 @@ export function NamazManager({ mosques: initial }: NamazManagerProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const pending = mosques.filter((m) => m.status === "pending");
   const verified = mosques.filter((m) => m.status === "verified");
-
-  async function handleVerify(id: string) {
-    setError("");
-    try {
-      const res = await fetch(`/api/admin/namaz/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "verified" }),
-      });
-      if (!res.ok) { const d = await res.json(); setError(d.error || "Failed"); return; }
-      setMosques((prev) => prev.map((m) => m.id === id ? { ...m, status: "verified" } : m));
-      router.refresh();
-    } catch {
-      setError("Network error");
-    }
-  }
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this mosque entry permanently?")) return;
@@ -106,54 +89,6 @@ export function NamazManager({ mosques: initial }: NamazManagerProps) {
   return (
     <div className="flex flex-col gap-8">
       {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{error}</div>}
-
-      {/* Pending Section */}
-      <section>
-        <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-amber-500" />
-          Pending Verification ({pending.length})
-        </h2>
-
-        {pending.length === 0 ? (
-          <p className="text-sm text-gray-400 py-4">No pending mosque registrations.</p>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {pending.map((mosque) => (
-              <div key={mosque.id} className="bg-white border border-gray-200 rounded-xl p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h3 className="font-bold text-gray-900">{mosque.name}</h3>
-                    <p className="text-sm text-gray-500">{mosque.area}</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => handleVerify(mosque.id)}
-                      className="p-1.5 text-green-600 hover:bg-green-50 rounded transition-colors"
-                      title="Verify"
-                    >
-                      <CheckCircle className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(mosque.id)}
-                      className="p-1.5 text-red-500 hover:bg-red-50 rounded transition-colors"
-                      title="Reject / Delete"
-                    >
-                      <XCircle className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-                <div className="grid grid-cols-5 gap-2 text-center text-xs">
-                  <div><span className="text-gray-400">Fajr</span><p className="font-medium">{mosque.fajr}</p></div>
-                  <div><span className="text-gray-400">Dhuhr</span><p className="font-medium">{mosque.dhuhr}</p></div>
-                  <div><span className="text-gray-400">Asr</span><p className="font-medium">{mosque.asr}</p></div>
-                  <div><span className="text-gray-400">Maghrib</span><p className="font-medium">{mosque.maghrib}</p></div>
-                  <div><span className="text-gray-400">Isha</span><p className="font-medium">{mosque.isha}</p></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
 
       {/* Verified Section */}
       <section>
